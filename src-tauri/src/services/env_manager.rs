@@ -67,8 +67,9 @@ fn create_backup(conflicts: &[EnvConflict]) -> Result<BackupInfo, String> {
 
 /// Get backup directory path
 fn get_backup_dir() -> Result<PathBuf, String> {
-    let home = dirs::home_dir().ok_or("无法获取用户主目录")?;
-    Ok(home.join(".cc-switch").join("backups"))
+    let exe_path = std::env::current_exe().map_err(|e| format!("无法获取可执行文件路径: {}", e))?;
+    let parent = exe_path.parent().ok_or("无法获取父目录")?;
+    Ok(parent.join("cache").join("backups"))
 }
 
 /// Delete a single environment variable
